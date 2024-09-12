@@ -2008,7 +2008,7 @@
     "asset": null,
     "fileId": "b6b37cd8-5a4c-44fc-9eb5-eb25e50b05d2",
     "instance": null,
-    "targetOverrides": null,
+    "targetOverrides": [],
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 12
