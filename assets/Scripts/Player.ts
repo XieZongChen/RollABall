@@ -1,4 +1,12 @@
-import { _decorator, Component, EventKeyboard, Input, input, Node } from 'cc';
+import {
+  _decorator,
+  Component,
+  EventKeyboard,
+  Input,
+  input,
+  KeyCode,
+  Node,
+} from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
@@ -24,6 +32,20 @@ export class Player extends Component {
   }
 
   onKeyPressing(event: EventKeyboard) {
-    console.log('onKeyPressing', event.keyCode);
+    const pos = this.node.position;
+    switch (event.keyCode) {
+      case KeyCode.KEY_A:
+        this.node.setPosition(pos.x, pos.y, pos.z - 0.2);
+        break;
+      case KeyCode.KEY_D:
+        this.node.setPosition(pos.x, pos.y, pos.z + 0.2);
+        break;
+      case KeyCode.KEY_W:
+        this.node.setPosition(pos.x + 0.2, pos.y, pos.z);
+        break;
+      case KeyCode.KEY_S:
+        this.node.setPosition(pos.x - 0.2, pos.y, pos.z);
+        break;
+    }
   }
 }
