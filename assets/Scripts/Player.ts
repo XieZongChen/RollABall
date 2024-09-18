@@ -6,14 +6,19 @@ import {
   input,
   KeyCode,
   Node,
+  RigidBody,
   Vec2,
+  Vec3,
 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
 export class Player extends Component {
+  /**
+   * 施加力的放大倍数
+   */
   @property
-  public speed: number = 5;
+  public moveForce: number = 5;
 
   /**
    * 移动方向
@@ -24,10 +29,16 @@ export class Player extends Component {
    */
   private moveDir: Vec2 = Vec2.ZERO;
 
+  private rgd: RigidBody = null;
+
   protected onLoad(): void {
     input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
     input.on(Input.EventType.KEY_PRESSING, this.onKeyPressing, this);
+  }
+
+  protected start(): void {
+    this.rgd = this.getComponent(RigidBody);
   }
 
   protected onDestroy(): void {
@@ -85,11 +96,18 @@ export class Player extends Component {
   }
 
   protected update(dt: number): void {
-    const pos = this.node.position;
-    this.node.setPosition(
-      pos.x + this.moveDir.y * this.speed * dt,
-      pos.y,
-      pos.z + this.moveDir.x * this.speed * dt
+    // const pos = this.node.position;
+    // this.node.setPosition(
+    //   pos.x + this.moveDir.y * this.speed * dt,
+    //   pos.y,
+    //   pos.z + this.moveDir.x * this.speed * dt
+    // );
+    /**
+     * 通过给刚体施加力来移动物体
+     * - multiplyScalar 方法用于将向量的每个分量乘以一个标量用于放大向量
+     */
+    this.rgd.applyForce(
+      new Vec3(this.moveDir.y, 0, this.moveDir.x).multiplyScalar(this.moveForce)
     );
   }
 }
