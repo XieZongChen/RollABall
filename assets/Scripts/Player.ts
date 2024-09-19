@@ -3,6 +3,7 @@ import {
   Collider,
   Component,
   EventKeyboard,
+  ICollisionEvent,
   Input,
   input,
   KeyCode,
@@ -11,6 +12,7 @@ import {
   Vec2,
   Vec3,
 } from 'cc';
+import { Food } from './Food';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
@@ -60,9 +62,14 @@ export class Player extends Component {
     this.collider.off('onCollisionStay', this.onCollisionStay, this);
   }
 
-  onCollisionEnter(otherCollider: Collider, selfCollider: Collider) {}
-  onCollisionExit(otherCollider: Collider, selfCollider: Collider) {}
-  onCollisionStay(otherCollider: Collider, selfCollider: Collider) {}
+  onCollisionEnter(event: ICollisionEvent) {
+    const food = event.otherCollider.getComponent(Food);
+    if (food != null) {
+      food.node.destroy();
+    }
+  }
+  onCollisionExit(event: ICollisionEvent) {}
+  onCollisionStay(event: ICollisionEvent) {}
 
   initInput() {
     input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
