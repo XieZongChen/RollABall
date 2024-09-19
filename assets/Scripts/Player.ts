@@ -1,5 +1,6 @@
 import {
   _decorator,
+  Collider,
   Component,
   EventKeyboard,
   Input,
@@ -30,18 +31,45 @@ export class Player extends Component {
   private moveDir: Vec2 = Vec2.ZERO;
 
   private rgd: RigidBody = null;
+  private collider: Collider = null;
 
   protected onLoad(): void {
+    this.initInput();
+  }
+
+  protected start(): void {
+    this.rgd = this.getComponent(RigidBody);
+    this.initCollision();
+  }
+
+  protected onDestroy(): void {
+    this.destroyInput();
+  }
+
+  initCollision() {
+    this.collider = this.getComponent(Collider);
+    this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+    this.collider.on('onCollisionExit', this.onCollisionExit, this);
+    this.collider.on('onCollisionStay', this.onCollisionStay, this);
+  }
+
+  destroyCollision() {
+    this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
+    this.collider.off('onCollisionExit', this.onCollisionExit, this);
+    this.collider.off('onCollisionStay', this.onCollisionStay, this);
+  }
+
+  onCollisionEnter(otherCollider: Collider, selfCollider: Collider) {}
+  onCollisionExit(otherCollider: Collider, selfCollider: Collider) {}
+  onCollisionStay(otherCollider: Collider, selfCollider: Collider) {}
+
+  initInput() {
     input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
     input.on(Input.EventType.KEY_PRESSING, this.onKeyPressing, this);
   }
 
-  protected start(): void {
-    this.rgd = this.getComponent(RigidBody);
-  }
-
-  protected onDestroy(): void {
+  destroyInput() {
     input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
     input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
     input.off(Input.EventType.KEY_PRESSING, this.onKeyPressing, this);
