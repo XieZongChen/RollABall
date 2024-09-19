@@ -44,6 +44,7 @@ export class Player extends Component {
 
   protected onDestroy(): void {
     this.destroyInput();
+    this.destroyCollision();
   }
 
   initCollision() {
