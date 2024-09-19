@@ -51,16 +51,33 @@ export class Player extends Component {
 
   initCollision() {
     this.collider = this.getComponent(Collider);
-    this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
-    this.collider.on('onCollisionExit', this.onCollisionExit, this);
-    this.collider.on('onCollisionStay', this.onCollisionStay, this);
+
+    // 为了不改变小球吃食物时的运动轨迹，改为触发器触发
+    // this.collider.on('onCollisionEnter', this.onCollisionEnter, this);
+    // this.collider.on('onCollisionExit', this.onCollisionExit, this);
+    // this.collider.on('onCollisionStay', this.onCollisionStay, this);
+    this.collider.on('onTriggerEnter', this.onTriggerEnter, this);
+    this.collider.on('onTriggerExit', this.onTriggerExit, this);
+    this.collider.on('onTriggerStay', this.onTriggerStay, this);
   }
 
   destroyCollision() {
-    this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
-    this.collider.off('onCollisionExit', this.onCollisionExit, this);
-    this.collider.off('onCollisionStay', this.onCollisionStay, this);
+    // this.collider.off('onCollisionEnter', this.onCollisionEnter, this);
+    // this.collider.off('onCollisionExit', this.onCollisionExit, this);
+    // this.collider.off('onCollisionStay', this.onCollisionStay, this);
+    this.collider.off('onTriggerEnter', this.onTriggerEnter, this);
+    this.collider.off('onTriggerExit', this.onTriggerExit, this);
+    this.collider.off('onTriggerStay', this.onTriggerStay, this);
   }
+
+  onTriggerEnter(event: ICollisionEvent) {
+    const food = event.otherCollider.getComponent(Food);
+    if (food != null) {
+      food.node.destroy();
+    }
+  }
+  onTriggerExit(event: ICollisionEvent) {}
+  onTriggerStay(event: ICollisionEvent) {}
 
   onCollisionEnter(event: ICollisionEvent) {
     const food = event.otherCollider.getComponent(Food);
