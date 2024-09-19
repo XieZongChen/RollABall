@@ -103,15 +103,19 @@ export class Player extends Component {
   onKeyDown(event: EventKeyboard) {
     switch (event.keyCode) {
       case KeyCode.KEY_A:
+        if (this.moveDir.x > 0) return;
         this.moveDir = new Vec2(-1, this.moveDir.y);
         break;
       case KeyCode.KEY_D:
+        if (this.moveDir.x < 0) return;
         this.moveDir = new Vec2(1, this.moveDir.y);
         break;
       case KeyCode.KEY_W:
+        if (this.moveDir.y < 0) return;
         this.moveDir = new Vec2(this.moveDir.x, 1);
         break;
       case KeyCode.KEY_S:
+        if (this.moveDir.y > 0) return;
         this.moveDir = new Vec2(this.moveDir.x, -1);
         break;
     }
@@ -120,11 +124,19 @@ export class Player extends Component {
   onKeyUp(event: EventKeyboard) {
     switch (event.keyCode) {
       case KeyCode.KEY_A:
+        if (this.moveDir.x > 0) return;
+        this.moveDir = new Vec2(0, this.moveDir.y);
+        break;
       case KeyCode.KEY_D:
+        if (this.moveDir.x < 0) return;
         this.moveDir = new Vec2(0, this.moveDir.y);
         break;
       case KeyCode.KEY_W:
+        if (this.moveDir.y < 0) return;
+        this.moveDir = new Vec2(this.moveDir.x, 0);
+        break;
       case KeyCode.KEY_S:
+        if (this.moveDir.y > 0) return;
         this.moveDir = new Vec2(this.moveDir.x, 0);
         break;
     }
